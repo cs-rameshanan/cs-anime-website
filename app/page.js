@@ -1,21 +1,30 @@
-import { getFeaturedAnime, getAllGenres } from '@/lib/api';
+import { getFeaturedAnime, getAllGenres, getLatestDailyUpdate } from '@/lib/api';
 import HeroSection from '@/components/HeroSection';
 import AnimeCard from '@/components/AnimeCard';
 import GenreBadge from '@/components/GenreBadge';
+import RecentlyUpdated from '@/components/RecentlyUpdated';
 import Link from 'next/link';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
 export default async function HomePage() {
-  const [featuredAnime, genres] = await Promise.all([
+  const [featuredAnime, genres, dailyUpdate] = await Promise.all([
     getFeaturedAnime(8),
     getAllGenres(),
+    getLatestDailyUpdate(),
   ]);
 
   return (
     <div>
       {/* Hero Section */}
       <HeroSection featuredAnime={featuredAnime} />
+
+      {/* Recently Updated Section */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent to-gray-900/50">
+        <div className="max-w-7xl mx-auto">
+          <RecentlyUpdated update={dailyUpdate} />
+        </div>
+      </section>
 
       {/* Featured Anime Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
