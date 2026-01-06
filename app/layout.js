@@ -2,6 +2,7 @@ import { Outfit, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { CartProvider } from '@/context/CartContext';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -24,13 +25,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${outfit.variable} ${spaceGrotesk.variable}`}>
       <body className="font-sans antialiased">
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <main className="flex-1">
-            {children}
-          </main>
-          <Footer />
-        </div>
+        <CartProvider>
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </CartProvider>
       </body>
     </html>
   );
