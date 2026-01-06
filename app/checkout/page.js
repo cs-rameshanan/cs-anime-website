@@ -47,7 +47,10 @@ export default function CheckoutPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create order');
+        // Show detailed error for debugging
+        const errorDetails = data.details ? JSON.stringify(data.details) : '';
+        console.error('Order API Error:', data);
+        throw new Error(data.error + (errorDetails ? `: ${errorDetails}` : ''));
       }
 
       // Mark order as complete before clearing cart

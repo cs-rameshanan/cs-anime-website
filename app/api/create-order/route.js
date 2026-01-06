@@ -5,12 +5,32 @@ export async function POST(request) {
     const body = await request.json();
     const { name, email, items, total } = body;
 
+    // Check if environment variables are set
+    if (!process.env.CONTENTSTACK_API_KEY) {
+      console.error('Missing CONTENTSTACK_API_KEY');
+      return NextResponse.json(
+        { error: 'Server configuration error: Missing API Key' },
+        { status: 500 }
+      );
+    }
+    if (!process.env.CONTENTSTACK_MANAGEMENT_TOKEN) {
+      console.error('Missing CONTENTSTACK_MANAGEMENT_TOKEN');
+      return NextResponse.json(
+        { error: 'Server configuration error: Missing Management Token' },
+        { status: 500 }
+      );
+    }
+
     // Generate unique order ID
     const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
 
+    // Determine the API base URL based on region
+    // Default is NA, change if your stack is in EU or Azure
+    const apiBaseUrl = process.env.CONTENTSTACK_API_URL || 'https://api.contentstack.io';
+
     // Create order entry in Contentstack
     const response = await fetch(
-      'https://api.contentstack.io/v3/content_types/order/entries',
+      `${apiBaseUrl}/v3/content_types/order/entries`,
       {
         method: 'POST',
         headers: {
@@ -32,18 +52,23 @@ export async function POST(request) {
       }
     );
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Contentstack error:', errorData);
-      throw new Error('Failed to create order in Contentstack');
-    }
+    const responseData = await response.json();
 
-    const data = await response.json();
+    if (!response.ok) {
+      console.error('Contentstack error:', JSON.stringify(responseData));
+      return NextResponse.json(
+        { 
+          error: 'Failed to create order in Contentstack',
+          details: responseData 
+        },
+        { status: response.status }
+      );
+    }
 
     return NextResponse.json({
       success: true,
       orderId: orderId,
-      entryUid: data.entry.uid,
+      entryUid: responseData.entry.uid,
     });
   } catch (error) {
     console.error('Order creation error:', error);
@@ -53,4 +78,3 @@ export async function POST(request) {
     );
   }
 }
-
