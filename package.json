@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@contentstack/personalize-edge-sdk": "^1.0.21",
     "contentstack": "^3.21.1",
     "next": "^14.2.0",
     "react": "^18.3.1",
@@ -20,4 +21,3 @@
     "tailwindcss": "^3.4.17"
   }
 }
-

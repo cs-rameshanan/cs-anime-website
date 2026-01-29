@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
+import ProfileSwitcher from '@/components/ProfileSwitcher';
 
 function CartIcon() {
   const { cartCount } = useCart();
@@ -64,6 +65,7 @@ export default function Navbar() {
             >
               Genres
             </Link>
+            <ProfileSwitcher />
             <CartIcon />
             <Link
               href="/anime"
@@ -127,6 +129,9 @@ export default function Navbar() {
               >
                 Cart <CartIcon />
               </Link>
+              <div className="pt-2 border-t border-white/10">
+                <ProfileSwitcher />
+              </div>
             </div>
           </div>
         )}
