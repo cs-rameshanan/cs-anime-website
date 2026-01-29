@@ -2,6 +2,7 @@ import { Outfit, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import ChatBot from '@/components/ChatBot';
 import { CartProvider } from '@/context/CartContext';
 import { PersonalizeProvider } from '@/context/PersonalizeContext';
 import { ProfileProvider } from '@/context/ProfileContext';
@@ -37,6 +38,7 @@ export default function RootLayout({ children }) {
                 </main>
                 <Footer />
               </div>
+              <ChatBot />
             </CartProvider>
           </ProfileProvider>
         </PersonalizeProvider>
