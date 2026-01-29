@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
 // Helper to create slug from title
@@ -25,6 +24,9 @@ export default function AnimeCard({ anime, index = 0 }) {
   
   const href = `/anime/${slug}`;
   
+  // Get the image URL (poster_url now contains CDN URL after asset upload)
+  const imageUrl = anime.poster_url || '/placeholder.jpg';
+  
   return (
     <Link 
       href={href}
@@ -33,12 +35,12 @@ export default function AnimeCard({ anime, index = 0 }) {
     >
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden">
-        <Image
-          src={anime.poster_url || '/placeholder.jpg'}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={imageUrl}
           alt={anime.title}
-          fill
-          className="object-cover card-image transition-transform duration-500"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover card-image transition-transform duration-500"
         />
         
         {/* Gradient Overlay */}
