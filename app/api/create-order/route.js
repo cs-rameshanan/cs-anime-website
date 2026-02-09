@@ -24,20 +24,27 @@ export async function POST(request) {
     // Generate unique order ID
     const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
 
-    // Determine the API base URL based on region
-    // Default is NA, change if your stack is in EU or Azure
-    const apiBaseUrl = process.env.CONTENTSTACK_API_URL || 'https://dev22-app.csnonprod.com/api';
+    // Build the Management API URL from CONTENTSTACK_API_HOST
+    // Launch auto-populates this (e.g. "api.contentstack.io")
+    // For non-prod: set to "dev11-app.csnonprod.com/api" etc.
+    const apiHost = process.env.CONTENTSTACK_API_HOST || 'api.contentstack.io';
+    const apiBaseUrl = `https://${apiHost}/v3`;
+
+    // Build headers - management token for standard stacks
+    const headers = {
+      'api_key': process.env.CONTENTSTACK_API_KEY,
+      'authorization': process.env.CONTENTSTACK_MANAGEMENT_TOKEN,
+      'Content-Type': 'application/json',
+    };
+
+    console.log('Creating order via:', `${apiBaseUrl}/content_types/order/entries`);
 
     // Create order entry in Contentstack
     const response = await fetch(
-      `${apiBaseUrl}/v3/content_types/order/entries`,
+      `${apiBaseUrl}/content_types/order/entries`,
       {
         method: 'POST',
-        headers: {
-          'api_key': process.env.CONTENTSTACK_API_KEY,
-          'authorization': process.env.CONTENTSTACK_MANAGEMENT_TOKEN,
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({
           entry: {
             title: `Order ${orderId}`,
