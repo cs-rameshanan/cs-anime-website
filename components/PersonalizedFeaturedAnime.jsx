@@ -6,20 +6,27 @@ import { useProfile } from '@/context/ProfileContext';
 import { filterAnimeByProfile } from '@/lib/profileConfig';
 import AnimeCard from '@/components/AnimeCard';
 
-export default function PersonalizedFeaturedAnime({ animeList }) {
+export default function PersonalizedFeaturedAnime({ animeList, homepage }) {
   const { profileType, isKidsProfile, isLoading } = useProfile();
 
   // Filter anime based on current profile
   const filteredAnime = useMemo(() => {
+    // Use CMS featured_anime if available and populated with references
+    if (homepage?.featured_anime?.length > 0 && homepage.featured_anime[0]?.title) {
+      const cmsAnime = homepage.featured_anime;
+      if (!profileType) return cmsAnime;
+      return filterAnimeByProfile(cmsAnime, profileType);
+    }
+    // Fallback to passed animeList
     if (!profileType) return animeList;
     return filterAnimeByProfile(animeList, profileType);
-  }, [animeList, profileType]);
+  }, [animeList, homepage, profileType]);
 
-  // Section title based on profile
-  const sectionTitle = isKidsProfile ? 'Top Picks for Kids' : 'Top Rated Anime';
-  const sectionSubtitle = isKidsProfile 
+  // Section title: CMS first, then profile-based, then default
+  const sectionTitle = homepage?.featured_section_title || (isKidsProfile ? 'Top Picks for Kids' : 'Top Rated Anime');
+  const sectionSubtitle = homepage?.featured_section_subtitle || (isKidsProfile 
     ? 'Fun and exciting anime perfect for young viewers'
-    : 'Discover the highest-rated anime in our collection';
+    : 'Discover the highest-rated anime in our collection');
 
   if (isLoading) {
     return (

@@ -26,7 +26,7 @@ export async function POST(request) {
 
     // Determine the API base URL based on region
     // Default is NA, change if your stack is in EU or Azure
-    const apiBaseUrl = process.env.CONTENTSTACK_API_URL || 'https://api.contentstack.io';
+    const apiBaseUrl = process.env.CONTENTSTACK_API_URL || 'https://dev22-app.csnonprod.com/api';
 
     // Create order entry in Contentstack
     const response = await fetch(

@@ -1,23 +1,25 @@
-import { getFeaturedAnime, getAllGenres, getLatestDailyUpdate } from '@/lib/api';
+import { getFeaturedAnime, getAllGenres, getLatestDailyUpdate, getHomepage } from '@/lib/api';
 import PersonalizedHero from '@/components/PersonalizedHero';
 import PersonalizedFeaturedAnime from '@/components/PersonalizedFeaturedAnime';
 import PersonalizedGenres from '@/components/PersonalizedGenres';
 import PersonalizedCTA from '@/components/PersonalizedCTA';
 import RecentlyUpdated from '@/components/RecentlyUpdated';
 
-export const revalidate = 60; // Revalidate every 60 seconds
+// Use force-dynamic for Launch compatibility (CDN caching handled via next.config.js headers)
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  const [featuredAnime, genres, dailyUpdate] = await Promise.all([
+  const [featuredAnime, genres, dailyUpdate, homepage] = await Promise.all([
     getFeaturedAnime(8),
     getAllGenres(),
     getLatestDailyUpdate(),
+    getHomepage(),
   ]);
 
   return (
     <div>
-      {/* Personalized Hero Section - changes based on Kids/Normal profile */}
-      <PersonalizedHero featuredAnime={featuredAnime} />
+      {/* Personalized Hero Section - uses CMS homepage content + profile switching */}
+      <PersonalizedHero featuredAnime={featuredAnime} homepage={homepage} />
 
       {/* Recently Updated Section */}
       <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent to-gray-900/50">
@@ -26,14 +28,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Personalized Featured Anime - filtered for Kids profile */}
-      <PersonalizedFeaturedAnime animeList={featuredAnime} />
+      {/* Personalized Featured Anime - uses CMS homepage + profile filtering */}
+      <PersonalizedFeaturedAnime animeList={featuredAnime} homepage={homepage} />
 
       {/* Personalized Genres - hides blocked genres for Kids */}
       <PersonalizedGenres genres={genres} />
 
-      {/* Personalized CTA Section */}
-      <PersonalizedCTA />
+      {/* Personalized CTA Section - uses CMS homepage content */}
+      <PersonalizedCTA homepage={homepage} />
     </div>
   );
 }

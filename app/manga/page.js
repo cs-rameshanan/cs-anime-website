@@ -1,7 +1,7 @@
 import { getAllManga } from '@/lib/api';
 import MangaCard from '@/components/MangaCard';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Manga Store | AniVerse',

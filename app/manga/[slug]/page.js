@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import MangaAddToCart from '@/components/MangaAddToCart';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams() {
   const mangaList = await getAllManga();

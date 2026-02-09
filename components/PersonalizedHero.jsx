@@ -65,12 +65,32 @@ const HERO_CONTENT = {
   },
 };
 
-export default function PersonalizedHero({ featuredAnime }) {
+export default function PersonalizedHero({ featuredAnime, homepage }) {
   const { profileType, isLoading } = useProfile();
   const hero = featuredAnime?.[0];
   
   // Get content based on profile, default to normal
-  const content = HERO_CONTENT[profileType] || HERO_CONTENT[PROFILE_TYPES.NORMAL];
+  const defaults = HERO_CONTENT[profileType] || HERO_CONTENT[PROFILE_TYPES.NORMAL];
+  
+  // Merge CMS homepage data with hardcoded defaults (CMS wins if available)
+  const content = homepage ? {
+    title: {
+      line1: homepage.hero_title_line1 || defaults.title.line1,
+      line2: homepage.hero_title_line2 || defaults.title.line2,
+    },
+    subtitle: homepage.hero_subtitle || defaults.subtitle,
+    primaryButton: {
+      text: homepage.primary_button_text || defaults.primaryButton.text,
+      href: homepage.primary_button_link || defaults.primaryButton.href,
+    },
+    secondaryButton: {
+      text: homepage.secondary_button_text || defaults.secondaryButton.text,
+      href: homepage.secondary_button_link || defaults.secondaryButton.href,
+    },
+    stats: defaults.stats,
+    gradientClass: homepage.theme_gradient || defaults.gradientClass,
+    orbColors: defaults.orbColors,
+  } : defaults;
 
   if (isLoading) {
     return (

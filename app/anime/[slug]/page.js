@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import GenreBadge from '@/components/GenreBadge';
 import EpisodeCard from '@/components/EpisodeCard';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams() {
   const animeList = await getAllAnime();

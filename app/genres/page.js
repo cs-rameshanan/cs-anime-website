@@ -1,7 +1,7 @@
 import { getAllGenres } from '@/lib/api';
 import Link from 'next/link';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Browse Genres | AniVerse',
