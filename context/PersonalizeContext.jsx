@@ -29,10 +29,13 @@ export function PersonalizeProvider({ children }) {
         const module = await import('@contentstack/personalize-edge-sdk');
         PersonalizeSDK = module.default;
 
-        // Set custom edge API URL if provided
+        // Set custom edge API URL if provided (required for non-default regions)
         const edgeApiUrl = process.env.NEXT_PUBLIC_CONTENTSTACK_PERSONALIZE_EDGE_API_URL;
         if (edgeApiUrl) {
           PersonalizeSDK.setEdgeApiUrl(edgeApiUrl);
+        } else {
+          // Default to AWS NA edge API
+          PersonalizeSDK.setEdgeApiUrl('https://personalize-edge.contentstack.com');
         }
 
         // Check if already initialized
@@ -47,7 +50,9 @@ export function PersonalizeProvider({ children }) {
           setIsInitialized(true);
         }
       } catch (err) {
-        console.error('Failed to initialize Personalize SDK:', err);
+        // Personalize failed - log but don't crash the app
+        // Profile switching still works via local filtering without Personalize
+        console.warn('Personalize SDK not available:', err.message);
         setError(err.message);
       } finally {
         setIsLoading(false);

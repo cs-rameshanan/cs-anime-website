@@ -45,7 +45,7 @@ export default function PersonalizedGenres({ genres }) {
           <p className="text-gray-400">{sectionSubtitle}</p>
           
           {/* Kids mode notice */}
-          {isKidsProfile && filteredGenres.length < genres.length && (
+          {isKidsProfile && filteredGenres.length < (genres?.length || 0) && (
             <p className="text-pink-400 text-sm mt-2">
               Showing {filteredGenres.length} kid-friendly genres
             </p>

@@ -22,7 +22,7 @@ export default function FilteredAnimeList({ animeList, genres }) {
   }, [genres, profileType]);
 
   // Calculate how many anime were filtered out
-  const hiddenCount = animeList.length - filteredAnime.length;
+  const hiddenCount = (animeList?.length || 0) - (filteredAnime?.length || 0);
 
   if (isLoading) {
     return (
