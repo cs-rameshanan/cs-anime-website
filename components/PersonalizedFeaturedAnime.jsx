@@ -10,17 +10,13 @@ export default function PersonalizedFeaturedAnime({ animeList, homepage }) {
   const { profileType, isKidsProfile, isLoading } = useProfile();
 
   // Filter anime based on current profile
+  // Always use animeList (from getFeaturedAnime) because it has genres fully resolved.
+  // homepage.featured_anime only resolves one level deep (no nested genre refs).
   const filteredAnime = useMemo(() => {
-    // Use CMS featured_anime if available and populated with references
-    if (homepage?.featured_anime?.length > 0 && homepage.featured_anime[0]?.title) {
-      const cmsAnime = homepage.featured_anime;
-      if (!profileType) return cmsAnime;
-      return filterAnimeByProfile(cmsAnime, profileType);
-    }
-    // Fallback to passed animeList
-    if (!profileType) return animeList;
-    return filterAnimeByProfile(animeList, profileType);
-  }, [animeList, homepage, profileType]);
+    const source = animeList || [];
+    if (!profileType) return source;
+    return filterAnimeByProfile(source, profileType);
+  }, [animeList, profileType]);
 
   // Section title: CMS first, then profile-based, then default
   const sectionTitle = homepage?.featured_section_title || (isKidsProfile ? 'Top Picks for Kids' : 'Top Rated Anime');
