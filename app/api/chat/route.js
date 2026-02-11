@@ -16,7 +16,7 @@ const BRAND_KIT_CONFIG = {
   authToken: process.env.CONTENTSTACK_AUTHTOKEN,
   apiKey: process.env.CONTENTSTACK_API_KEY,
   // Automation API for Brand Kit AI
-  automationUrl: process.env.CONTENTSTACK_AUTOMATION_URL || 'https://app.contentstack.com/automations-api/run/2830aa21efac4ac9a78dc087c628ea35',
+  automationUrl: process.env.CONTENTSTACK_AUTOMATION_URL,
 };
 
 // Strict system prompt to limit responses to anime/manga only
@@ -79,6 +79,12 @@ async function callBrandKitAI(messages) {
 
   // Get the last user message
   const lastUserMessage = messages[messages.length - 1].content;
+
+  // If no automation URL configured, use fallback responses
+  if (!automationUrl) {
+    console.warn('CONTENTSTACK_AUTOMATION_URL not set. Using fallback responses.');
+    return generateFallbackResponse(lastUserMessage);
+  }
   
   // Check if anime related first
   if (!isAnimeRelated(lastUserMessage)) {
