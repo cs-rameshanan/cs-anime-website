@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { csClient } from "../../csClient.js";
+import { csClient } from "./csClient.js";
 
 /**
  * 🚀 Contentstack DXP Bootstrap Script

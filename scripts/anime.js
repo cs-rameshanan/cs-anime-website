@@ -1,5 +1,5 @@
 import slugify from "slugify";
-import { csClient } from "../../csClient.js";
+import { csClient } from "./csClient.js";
 
 export async function animeExists(malId) {
   const res = await csClient.get(
