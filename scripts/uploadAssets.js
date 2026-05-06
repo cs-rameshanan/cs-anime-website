@@ -3,6 +3,7 @@ import axios from "axios";
 import FormData from "form-data";
 import { csClient } from "./csClient.js";
 import path from "path";
+import { resolveMediaUrl, isStackCdnUrl } from "../lib/imageUtils.js";
 
 /**
  * Contentstack Asset Upload Script
@@ -151,15 +152,15 @@ async function updateAnimeWithAsset(entryUid, assetUid, assetUrl) {
 async function processAnime(anime) {
   console.log(`\n📺 Processing: ${anime.title}`);
   
-  const posterUrl = anime.poster_url;
-  
+  const posterUrl =
+    resolveMediaUrl(anime.poster_url) || resolveMediaUrl(anime.poster_asset);
+
   if (!posterUrl) {
     console.log(`  ⏭ No poster URL, skipping`);
     return;
   }
 
-  // Check if already using Contentstack CDN
-  if (posterUrl.includes('contentstack.io') || posterUrl.includes('contentstack.com')) {
+  if (isStackCdnUrl(posterUrl)) {
     console.log(`  ⏭ Already using Contentstack CDN`);
     return;
   }

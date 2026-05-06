@@ -3,6 +3,7 @@ import axios from "axios";
 import FormData from "form-data";
 import { csClient } from "./csClient.js";
 import path from "path";
+import { resolveMediaUrl, isStackCdnUrl } from "../lib/imageUtils.js";
 
 /**
  * Contentstack Manga Asset Upload Script
@@ -132,15 +133,15 @@ async function updateMangaWithAsset(entryUid, assetUid, assetUrl) {
 async function processManga(manga) {
   console.log(`\n📖 Processing: ${manga.title}`);
   
-  const coverUrl = manga.cover_image;
-  
+  const coverUrl =
+    resolveMediaUrl(manga.cover_image) || resolveMediaUrl(manga.cover_asset);
+
   if (!coverUrl) {
     console.log(`  ⏭ No cover image URL, skipping`);
     return;
   }
 
-  // Check if already using Contentstack CDN
-  if (coverUrl.includes('contentstack.io') || coverUrl.includes('contentstack.com')) {
+  if (isStackCdnUrl(coverUrl)) {
     console.log(`  ⏭ Already using Contentstack CDN`);
     return;
   }
