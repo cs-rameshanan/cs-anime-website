@@ -15,7 +15,7 @@ import { csClient } from "./csClient.js";
  * Note: "order" entries are NOT auto-published (created at runtime via the frontend).
  */
 
-const ENVIRONMENT = process.env.CONTENTSTACK_ENV || "development";
+const ENVIRONMENT = process.env.CONTENTSTACK_ENVIRONMENT || "development";
 const RATE_LIMIT_MS = 400; // ms between publish calls to avoid 429s
 
 async function publishEntry(contentTypeUid, entryUid, title) {

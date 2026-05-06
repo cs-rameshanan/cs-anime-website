@@ -601,7 +601,7 @@ async function updateContentType(uid, newFields) {
 }
 
 async function createEnvironment() {
-  const envName = process.env.CONTENTSTACK_ENV || "development";
+  const envName = process.env.CONTENTSTACK_ENVIRONMENT || "development";
 
   if (await environmentExists(envName)) {
     console.log(`  ⏭ Environment '${envName}' already exists`);
@@ -682,7 +682,7 @@ async function bootstrap() {
   console.log("\n==============================");
   console.log("📊 Bootstrap Summary");
   console.log("==============================");
-  const envName = process.env.CONTENTSTACK_ENV || "development";
+  const envName = process.env.CONTENTSTACK_ENVIRONMENT || "development";
   console.log(`✅ Environment: ${envName}`);
   console.log("✅ Content Types: genre, anime, manga, episode, daily_update, homepage, order");
   
@@ -697,8 +697,8 @@ async function bootstrap() {
   console.log("");
   console.log("📌 Manual Setup Required in Contentstack UI:");
   console.log("─────────────────────────────────");
-  console.log("• Personalize → Create project, add 'profile_type' attribute");
-  console.log("• Brand Kit   → Create brand kit, add AniBot voice profile");
+  console.log("• Personalize → Create project in UI, then: npm run setup-personalize");
+  console.log("• Brand Kit   → npm run setup-brand-kit (or create in UI)");
   console.log("• Automation  → Create automation workflow for chatbot");
   console.log(`• Delivery Token → Create one for the '${envName}' environment`);
   console.log("");

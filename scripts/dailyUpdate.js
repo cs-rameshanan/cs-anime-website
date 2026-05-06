@@ -91,7 +91,7 @@ function formatEpisodes(episodes) {
  * Publish entry to configured environment
  */
 async function publishEntry(entryUid) {
-  const envName = process.env.CONTENTSTACK_ENV || "development";
+  const envName = process.env.CONTENTSTACK_ENVIRONMENT || "development";
   try {
     await csClient.post(`/content_types/daily_update/entries/${entryUid}/publish`, {
       entry: {

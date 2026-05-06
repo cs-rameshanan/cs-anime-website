@@ -1,5 +1,9 @@
-import "dotenv/config";
 import { execSync } from "child_process";
+import { loadEnvLocal, REPO_ROOT } from "./loadEnvLocal.js";
+import path from "path";
+
+loadEnvLocal();
+const envLocalPath = path.join(REPO_ROOT, ".env.local");
 
 /**
  * 🏗️ Master Setup Script - Build the Full DXP from Scratch
@@ -12,53 +16,62 @@ import { execSync } from "child_process";
  * 4. Upload Anime Assets → Download posters & upload to Contentstack CDN
  * 5. Upload Manga Assets → Download covers & upload to Contentstack CDN
  * 6. Daily Update → Create today's daily update entry
- * 7. Publish → Publish all entries to development
- * 
+ * 7. Publish → Publish all entries
+ * 8. Personalize + Brand Kit + Homepage setup (API-driven where possible)
+ *
  * Usage: npm run setup
+ *
+ * Environment: reads only **../.env.local** (project root). Put management + delivery
+ * variables there so setup matches your Next.js config.
  */
 
 const steps = [
   {
     name: "Bootstrap Content Types & Environment",
-    command: "node anime-website/scripts/bootstrap.js",
+    command: "node scripts/bootstrap.js",
     emoji: "🚀",
   },
   {
     name: "Import Anime + Genres + Episodes",
-    command: "node anime-website/scripts/index.js",
+    command: "node scripts/index.js",
     emoji: "📺",
     delay: 3000, // Extra delay after bootstrap
   },
   {
     name: "Import Manga",
-    command: "node anime-website/scripts/manga.js",
+    command: "node scripts/manga.js",
     emoji: "📖",
   },
   {
     name: "Upload Anime Poster Assets to CDN",
-    command: "node anime-website/scripts/uploadAssets.js",
+    command: "node scripts/uploadAssets.js",
     emoji: "🖼️",
   },
   {
     name: "Upload Manga Cover Assets to CDN",
-    command: "node anime-website/scripts/uploadMangaAssets.js",
+    command: "node scripts/uploadMangaAssets.js",
     emoji: "🎨",
   },
   {
     name: "Create Daily Update",
-    command: "node anime-website/scripts/dailyUpdate.js",
+    command: "node scripts/dailyUpdate.js",
     emoji: "📰",
   },
   {
-    name: "Publish All Entries",
-    command: "node anime-website/scripts/publishEntries.js",
-    emoji: "📤",
+    name: "Setup Personalize",
+    command: "node scripts/setupPersonalize.js",
+    emoji: "👤",
   },
   {
-    name: "Setup Homepage + Audience Tags + Variants",
-    command: "node anime-website/scripts/setupHomepage.js",
-    emoji: "🏠",
+    name: "Setup Brand Kit",
+    command: "node scripts/setupBrandKit.js",
+    emoji: "🎤",
   },
+  // {
+  //   name: "Setup Homepage + Audience Tags + Variants",
+  //   command: "node scripts/setupHomepage.js",
+  //   emoji: "🏠",
+  // },
 ];
 
 async function runSetup() {
@@ -70,18 +83,18 @@ async function runSetup() {
 
   // Validate environment
   if (!process.env.CONTENTSTACK_API_KEY) {
-    console.error("❌ Missing CONTENTSTACK_API_KEY in .env file");
-    console.error("   Please configure your .env file first.");
+    console.error("❌ Missing CONTENTSTACK_API_KEY in .env.local");
+    console.error(`   Expected file: ${envLocalPath}`);
     process.exit(1);
   }
   if (!process.env.CONTENTSTACK_MANAGEMENT_TOKEN) {
-    console.error("❌ Missing CONTENTSTACK_MANAGEMENT_TOKEN in .env file");
-    console.error("   Please configure your .env file first.");
+    console.error("❌ Missing CONTENTSTACK_MANAGEMENT_TOKEN in .env.local");
+    console.error(`   Expected file: ${envLocalPath}`);
     process.exit(1);
   }
 
   console.log(`🔑 API Key: ${process.env.CONTENTSTACK_API_KEY}`);
-  console.log(`🌍 Environment: ${process.env.CONTENTSTACK_ENV || "development"}`);
+  console.log(`🌍 Environment: ${process.env.CONTENTSTACK_ENVIRONMENT || "development"}`);
   console.log("");
 
   const startTime = Date.now();
@@ -131,15 +144,15 @@ async function runSetup() {
   console.log(`║  ⏱  Total time: ${elapsed}s${" ".repeat(Math.max(0, 32 - elapsed.length))}║`);
   console.log("╠════════════════════════════════════════════════════╣");
   console.log("║                                                    ║");
-  console.log("║  🌐 Frontend: cd anime-website && npm run dev      ║");
+    console.log("║  🌐 Frontend: npm run dev                          ║");
   console.log("║  📍 URL: http://localhost:3000                     ║");
   console.log("║                                                    ║");
   console.log("╠════════════════════════════════════════════════════╣");
-  const envName = process.env.CONTENTSTACK_ENV || "development";
+  const envName = process.env.CONTENTSTACK_ENVIRONMENT || "development";
   console.log("║  📌 Manual Contentstack UI Setup:                  ║");
   console.log(`║  • Create a Delivery Token for '${envName}'${" ".repeat(Math.max(0, 15 - envName.length))}║`);
-  console.log("║  • Set up Personalize (profile_type attribute)      ║");
-  console.log("║  • Set up Brand Kit + Voice Profile (AniBot)       ║");
+  console.log("║  • Personalize: npm run setup-personalize         ║");
+  console.log("║  • Brand Kit: npm run setup-brand-kit               ║");
   console.log("║  • Create Automation for chatbot                   ║");
   console.log("║                                                    ║");
   console.log("║  🚀 Deploy to Contentstack Launch:                 ║");

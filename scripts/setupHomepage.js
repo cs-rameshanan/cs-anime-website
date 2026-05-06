@@ -12,7 +12,7 @@ import { csClient } from "./csClient.js";
  * 5. Publishes everything
  */
 
-const ENV = process.env.CONTENTSTACK_ENV || "production";
+const ENV = process.env.CONTENTSTACK_ENVIRONMENT || "production";
 const DELAY = 1000;
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -405,10 +405,12 @@ async function main() {
   console.log("║   4. Create Audience 'Normal':                     ║");
   console.log("║      profile_type equals 'normal'                  ║");
   console.log("║   5. Create Experience on 'homepage':              ║");
-  console.log("║      - Variant 'Normal' → Kids audience            ║");
-  console.log("║      - Variant 'Kids' → Normal audience            ║");
+  console.log("║      - Variant 'normal' → Normal audience          ║");
+  console.log("║      - Variant 'kids'   → Kids audience            ║");
+  console.log("║      (or run: npm run setup-personalize)            ║");
   console.log("║   6. Open Homepage entry → Switch to Kids variant  ║");
   console.log("║      → Apply the Kids content shown above          ║");
+  console.log("║   Brand Kit + AniBot voice: npm run setup-brand-kit ║");
   console.log("║                                                    ║");
   console.log("╚════════════════════════════════════════════════════╝");
 }

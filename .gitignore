@@ -31,3 +31,6 @@ Thumbs.db
 anime-website@1.0.0
 next
 
+# Local Automate project id (from npm run setup-automate)
+automations/.automate-project-uid
+

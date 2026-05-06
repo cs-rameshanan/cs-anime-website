@@ -2,18 +2,39 @@
   "name": "anime-website",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup": "node scripts/setup.js",
+    "bootstrap": "node scripts/bootstrap.js",
+    "import-anime": "node scripts/index.js",
+    "import-manga": "node scripts/manga.js",
+    "upload-assets": "node scripts/uploadAssets.js",
+    "upload-assets:dry": "DRY_RUN=true node scripts/uploadAssets.js",
+    "upload-manga-assets": "node scripts/uploadMangaAssets.js",
+    "upload-manga-assets:dry": "DRY_RUN=true node scripts/uploadMangaAssets.js",
+    "daily-update": "node scripts/dailyUpdate.js",
+    "publish": "node scripts/publishEntries.js",
+    "setup-homepage": "node scripts/setupHomepage.js",
+    "setup-personalize": "node scripts/setupPersonalize.js",
+    "setup-brand-kit": "node scripts/setupBrandKit.js",
+    "setup-automation": "node scripts/setupAutomation.js",
+    "replicate-automate-rules": "node scripts/replicateAutomateRules.js",
+    "setup-automate": "node scripts/setupAutomate.js"
   },
   "dependencies": {
     "@contentstack/personalize-edge-sdk": "^1.0.21",
+    "axios": "^1.6.0",
     "contentstack": "^3.21.1",
+    "dotenv": "^16.3.1",
+    "form-data": "^4.0.0",
     "next": "15.5.10",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "slugify": "^1.6.6"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
